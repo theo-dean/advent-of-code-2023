@@ -1,11 +1,14 @@
 import { readFileSync } from "fs";
 
-const file = readFileSync("day1/input", { encoding: "utf8" });
+const filePath = process.argv[2];
+const file = readFileSync(filePath, { encoding: "utf8" });
 
 const solution = file
   .split("\n")
-  .map((line) => line.replace(/[^0-9]/g, ""))
-  .map((line) => parseInt(`${line[0]}${line[line.length - 1]}`))
+  .map((line) => {
+    const numbers = line.replace(/[^0-9]/g, "");
+    return parseInt(`${numbers[0]}${numbers[numbers.length - 1]}`);
+  })
   .reduce((acc, curr) => acc + curr, 0);
 
 console.log(solution);

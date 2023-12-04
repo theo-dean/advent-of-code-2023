@@ -21,7 +21,7 @@ enquirer.prompt([
     }
 ]).then(dayAndPart => {
     import('execa').then(({execa}) => {
-        execa("ts-node", [`./day${dayAndPart.day}/part${dayAndPart.part}.ts`])
+        execa("ts-node", [`./day${dayAndPart.day}/part${dayAndPart.part}.ts`, `day${dayAndPart.day}/input`])
             .then(({stdout}) => {
                 console.log(stdout);
             });
