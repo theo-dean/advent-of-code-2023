@@ -14,3 +14,5 @@ const solution = file
   .reduce((acc, curr) => acc + curr, 0);
 
 console.log(solution);
+
+console.log("blah");
