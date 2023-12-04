@@ -15,5 +15,8 @@
     "execa": "^8.0.1",
     "husky": "^8.0.3",
     "ts-node": "^10.9.1"
+  },
+  "lint-staged": {
+    "*.ts": "prettier --write"
   }
 }
