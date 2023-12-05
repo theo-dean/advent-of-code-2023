@@ -16,7 +16,7 @@ const solution = () => {
             picks: line.match(/[0-9]{1,} [a-z]{3,5}/g) as string[]
         }
     });
-    const gamesByMaxPicks = games.map(game => {
+    const gamesByMinPicks = games.map(game => {
         return {
             gameId: game.gameId,
             maxPick: game.picks.reduce((acc: { [key: string]: number }, curr: string) => {
@@ -26,8 +26,7 @@ const solution = () => {
             }, {blue: 0, green: 0, red: 0})
         }
     });
-    const filtered = gamesByMaxPicks.filter(game => game.maxPick.red <= 12 && game.maxPick.blue <= 14 && game.maxPick.green <= 13);
-    const sum = filtered.reduce((acc, curr) => acc+parseInt(curr.gameId), 0);
+    const sum = gamesByMinPicks.reduce((acc, curr) => acc+(curr.maxPick.red*curr.maxPick.blue*curr.maxPick.green), 0);
     return sum;
 }
 
