@@ -17,6 +17,6 @@
     "ts-node": "^10.9.1"
   },
   "lint-staged": {
-    "*.ts": "prettier --write"
+    "*.ts": "npx prettier --write"
   }
 }

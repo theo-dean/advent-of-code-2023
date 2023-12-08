@@ -1,4 +1,5 @@
 import { readFileSync } from "fs";
+import { execa } from "execa";
 
 const sampleInput =
   "467..114..\n" +
@@ -30,38 +31,49 @@ type Number = {
 } & Coords;
 
 const getAdjacent = (matrix: string[][], number: Number): string[] => {
-  let adj: string[] = []
+  let adj: string[] = [];
 
-  for (let y = number.y-1; y <= number.y+1; y++){
-    for (let x = number.x-1; x <= number.x+number.length; x++){
-      if (y < matrix.length && y >=0 && x < matrix[y].length && x >= 0) {
-        adj.push(matrix[y][x])
+  for (let y = number.y - 1; y <= number.y + 1; y++) {
+    for (let x = number.x - 1; x <= number.x + number.length; x++) {
+      if (y < matrix.length && y >= 0 && x < matrix[y].length && x >= 0) {
+        adj.push(matrix[y][x]);
       }
     }
   }
   return adj;
-}
+};
 const solution = () => {
-  const lines = sampleInput.split("\n");
+  const lines = file.split("\n");
   const matrix = lines.map((line) => line.split(""));
 
   const symbols = matrix.map((line, y) =>
     line.map((char, x) => ({ data: char, x, y })).filter((symbol) => symbol.data !== "."),
   );
 
-  const numbers = lines.map((line, y) =>
-      ({matches: (/\d+/g.exec(line) as RegExpExecArray).filter(e => e !== null).map(match => ({number: parseInt(match[0]), length: match[0]}))})
-  )
+  const numbers = lines.flatMap((line, y) => {
+    const regex = /\d+/g;
+    let matches = [];
+    let match;
+    do {
+      match = regex.exec(line);
+      if (match) {
+        matches.push({ data: parseInt(match[0]), length: match[0].length, x: match["index"], y });
+      }
+    } while (match);
+    return matches;
+  });
 
-  //const blah = numbers.filter(match => match.match !== null).map(match => ({data: parseInt(match.match[0]), length: match.match[0].length, x: match.match["index"], y: match.y}));
+  const numbersWithAdjacent = numbers.map((num) => ({
+    ...num,
+    adjacent: getAdjacent(matrix, num),
+  }));
 
-  //const blah = numbers.map(num => ({
-  //  ...num,
-  //  adjacent: getAdjacent(matrix, num)
-  //}));
+  const sumOfValidNumbers = numbersWithAdjacent
+    .filter((num) => num.adjacent.some((e) => /[^0-9.]/.test(e)))
+    .map((e) => e.data)
+    .reduce((acc, curr) => acc + curr, 0);
 
-  //const validNumbers = numbersWithAdjacent.filter(num => num.adjacent.some(e => /[^0-9.]/.test(e))).map(e => e.data)//.reduce((acc, curr) => acc+curr, 0);
-  return numbers;
+  return sumOfValidNumbers;
 };
 
 console.log(solution());
