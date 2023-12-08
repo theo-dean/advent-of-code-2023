@@ -21,16 +21,27 @@ type Coords = {
   y: number;
 };
 
-type Symbol = {
-  data: string;
-} & Coords;
-
 type Number = {
   data: number;
   length: number;
 } & Coords;
 
-const getAdjacent = (matrix: string[][], number: Number): string[] => {
+const getNumbers = (rows: string[]): Number[] => {
+  return rows.flatMap((line, y) => {
+    const regex = /\d+/g;
+    let matches = [];
+    let match;
+    do {
+      match = regex.exec(line);
+      if (match) {
+        matches.push({ data: parseInt(match[0]), length: match[0].length, x: match["index"], y });
+      }
+    } while (match);
+    return matches;
+  });
+};
+
+const getAdjacentCells = (matrix: string[][], number: Number): string[] => {
   let adj: string[] = [];
 
   for (let y = number.y - 1; y <= number.y + 1; y++) {
@@ -43,35 +54,19 @@ const getAdjacent = (matrix: string[][], number: Number): string[] => {
   return adj;
 };
 const solution = () => {
-  const lines = file.split("\n");
-  const matrix = lines.map((line) => line.split(""));
+  const rows = file.split("\n");
+  const matrix = rows.map((line) => line.split(""));
 
-  const symbols = matrix.map((line, y) =>
-    line.map((char, x) => ({ data: char, x, y })).filter((symbol) => symbol.data !== "."),
-  );
+  const numbers = getNumbers(rows);
 
-  const numbers = lines.flatMap((line, y) => {
-    const regex = /\d+/g;
-    let matches = [];
-    let match;
-    do {
-      match = regex.exec(line);
-      if (match) {
-        matches.push({ data: parseInt(match[0]), length: match[0].length, x: match["index"], y });
-      }
-    } while (match);
-    return matches;
-  });
-
-  const numbersWithAdjacent = numbers.map((num) => ({
+  const numbersWithAdjacentCells = numbers.map((num) => ({
     ...num,
-    adjacent: getAdjacent(matrix, num),
+    adjacent: getAdjacentCells(matrix, num),
   }));
 
-  const sumOfValidNumbers = numbersWithAdjacent
+  const sumOfValidNumbers = numbersWithAdjacentCells
     .filter((num) => num.adjacent.some((e) => /[^0-9.]/.test(e)))
-    .map((e) => e.data)
-    .reduce((acc, curr) => acc + curr, 0);
+    .reduce((acc, curr) => acc + curr.data, 0);
 
   return sumOfValidNumbers;
 };
