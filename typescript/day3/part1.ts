@@ -1,6 +1,3 @@
-import { readFileSync } from "fs";
-import { execa } from "execa";
-
 const sampleInput =
   "467..114..\n" +
   "...*......\n" +
@@ -13,8 +10,7 @@ const sampleInput =
   "...$.*....\n" +
   ".664.598..";
 
-const filePath = process.argv[2];
-const file = readFileSync(filePath, { encoding: "utf8" });
+const file = Deno.readTextFileSync("input", { encoding: "utf8" });
 
 type Coords = {
   x: number;

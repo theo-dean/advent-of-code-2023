@@ -1,7 +1,6 @@
 import { readFileSync } from "fs";
 
-const filePath = process.argv[2];
-const file = readFileSync(filePath, { encoding: "utf8" });
+const file = Deno.readTextFileSync("input", { encoding: "utf8" });
 
 const numbersByWords: { [key: string]: string } = {
   one: "1",
