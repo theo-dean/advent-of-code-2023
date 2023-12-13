@@ -8,7 +8,7 @@ const sampleInput =
 
 const file = Deno.readTextFileSync("input", { encoding: "utf8" });
 
-const lines = sampleInput.split("\n");
+const lines = file.split("\n");
 
 const games = lines.map((line) =>
   line
