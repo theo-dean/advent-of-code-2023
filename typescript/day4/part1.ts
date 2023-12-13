@@ -6,32 +6,21 @@ const sampleInput =
   "Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36\n" +
   "Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11";
 
-const file = Deno.readTextFileSync("input", { encoding: "utf8" });
+const file = Deno.readTextFileSync("input");
 
-const lines = file.split("\n");
-
-const games = lines.map((line) =>
-  line
-    .split(":")[1]
-    .split("|")
-    .map((nums) => nums.split(" ").filter((n) => n !== "")),
-);
-
-const parsed = games.map((game) =>
-  game.map((nums) => nums.map((num) => parseInt(num))),
+const parsed = file.split("\n").map((line) =>
+    line
+        .split(":")[1]
+        .split("|")
+        .map((nums) => nums.trim().split(" ").map(Number).filter(Boolean)),
 );
 
 const winningNumbers = parsed
-  .map((game) => game[0].filter((num) => game[1].includes(num)))
-  .filter((game) => game.length > 0);
+    .map((game) => game[0].filter((num) => game[1].includes(num)))
+    .filter((game) => game.length > 0);
 
 const sum = winningNumbers
-  .map(
-    (game) =>
-      game.reduce((acc, curr) => {
-        if (acc === 0) return 1;
-        return acc * 2;
-      }, 0),
-  ).reduce((acc, curr) => acc+curr, 0)
+    .map((game) => game.reduce((acc, curr) => (acc === 0 ? 1 : acc * 2), 0))
+    .reduce((acc, curr) => acc + curr, 0);
 
 console.log(sum);
